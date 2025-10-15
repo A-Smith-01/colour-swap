@@ -1,7 +1,10 @@
 'use client'
 import styles from "./page.module.css";
-import { useState } from "react"
+import { useState, useRef } from "react"
 import colourGroups from "./colours";
+import { Canvas, useFrame } from "@react-three/fiber";
+import * as THREE from 'three/webgpu'
+// import { OrbitControls } from '@react-three/drei'
 
 export default function Home() {
   const [currentColour, setCurrentColour] = useState(colourGroups[0].colours[0])
@@ -52,13 +55,13 @@ export default function Home() {
             <div className={styles.filter}>
               <p>Filter by colour</p>
               <div className={styles.filterColours}>
-                <button className={styles.colourFilter} style={{backgroundColor: "Green"}} onClick={() => handleFilterClick("Green")}/>
-                <button className={styles.colourFilter} style={{backgroundColor: "White"}} onClick={() => handleFilterClick("Neutral")}/>
-                <button className={styles.colourFilter} style={{backgroundColor: "Blue"}} onClick={() => handleFilterClick("Blue")}/>
+                <button className={`${styles.colourFilter} ${colourFilter === `Green` ? styles.selected : ""}`} style={{backgroundColor: "Green"}} onClick={() => handleFilterClick("Green")}/>
+                <button className={`${styles.colourFilter} ${colourFilter === `Neutral` ? styles.selected : ""}`} style={{backgroundColor: "White"}} onClick={() => handleFilterClick("Neutral")}/>
+                <button className={`${styles.colourFilter} ${colourFilter === `Blue` ? styles.selected : ""}`} style={{backgroundColor: "Blue"}} onClick={() => handleFilterClick("Blue")}/>
               </div>
             </div>
             <div className={styles.filter}>
-              <input onChange={handleUpdate} value={textFilter}></input>
+              <input onChange={handleUpdate} value={textFilter} placeholder="Search by colour name"></input>
             </div>
           </div>
           <div>
@@ -82,7 +85,19 @@ export default function Home() {
             }
           </div>
         </div>
-        <div className={styles.colourDisplay} style={{backgroundColor: currentColour.hex}}>{currentColour.name}</div> 
+        <div className={styles.colourDisplay}>
+          <h1>{currentColour.name}</h1>
+          <div className={styles.canvasContainer}>
+            <Canvas>
+              <mesh>
+                <ambientLight intensity={Math.PI / 2} />
+                <spotLight position={[30, 30, 30]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
+                <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
+                <Box colour={currentColour.hex}/>
+              </mesh>
+            </Canvas>  
+          </div>
+        </div> 
       </div>
     </div>
   );
@@ -94,5 +109,21 @@ function ColourButton({currentlySelected, colour, handleClick}){
       <div className={`${styles.colourBlock} ${currentlySelected ? styles.selected : ""}`} style={{backgroundColor: colour.hex}}/>
       <p>{colour.name}</p>
     </button>
+  )
+}
+
+function Box({colour}){
+  const colourValue = new THREE.Color(parseInt ( colour.replace("#","0x"), 16 ));
+  const ref = useRef()
+  useFrame((state, delta) => {
+    ref.current.rotation.x += delta;
+    ref.current.rotation.y += delta;
+  })
+
+  return (
+    <mesh ref={ref}> 
+      <boxGeometry args={[3,3,3]}/>
+      <meshStandardMaterial color={colourValue}/>
+    </mesh>
   )
 }
