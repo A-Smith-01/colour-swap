@@ -11,24 +11,6 @@ export default function Home() {
   const [colourFilter, setColourFilter] = useState(null)
   const [textFilter, setTextFilter] = useState("")
 
-  let filteredColours = colourGroups.map(group => ({ ...group, colours: [...group.colours] }))
-  
-  // Apply colour filter (keep only matching groups)
-  if (colourFilter) {
-    filteredColours = filteredColours.filter(group => group.class === colourFilter)
-  }
-
-  // Apply text filter
-  if (textFilter) {
-    const q = textFilter.toLowerCase()
-    filteredColours = filteredColours.map(group => {
-      return { ...group, colours: group.colours.filter(colour => colour.name.toLowerCase().includes(q)) }
-    })
-  }
-
-  // Remove empty colour groups
-  filteredColours = filteredColours.filter(group => group.colours.length > 0)
-
   function handleColourClick(colour){
     setCurrentColour(colour)
   }
@@ -53,51 +35,15 @@ export default function Home() {
         <div className={styles.selectionContent}>
           <div className={styles.filterContainer}>
             <div className={styles.filter}>
-              <p>Filter by colour</p>
-              <div className={styles.filterColours}>
-                <button className={`${styles.colourFilter} ${colourFilter === `Green` ? styles.selected : ""}`} style={{backgroundColor: "Green"}} onClick={() => handleFilterClick("Green")}/>
-                <button className={`${styles.colourFilter} ${colourFilter === `Neutral` ? styles.selected : ""}`} style={{backgroundColor: "White"}} onClick={() => handleFilterClick("Neutral")}/>
-                <button className={`${styles.colourFilter} ${colourFilter === `Blue` ? styles.selected : ""}`} style={{backgroundColor: "Blue"}} onClick={() => handleFilterClick("Blue")}/>
-              </div>
+              <ColourFilters handleFilterClick={handleFilterClick} colourFilter={colourFilter}/>
             </div>
             <div className={styles.filter}>
-              <input onChange={handleUpdate} value={textFilter} placeholder="Search by colour name"></input>
+              <TextFilter handleUpdate={handleUpdate} textFilter={textFilter}/>
             </div>
           </div>
-          <div>
-            {filteredColours.length > 0 ? filteredColours.map((colourGroup) => {
-              return (
-                <div key ={colourGroup.class} className={styles.colourOptions}>
-                  <h1>{colourGroup.class}</h1>
-                  <div className={styles.colourSelect}>
-                    {colourGroup.colours.map((colour) => {
-                      return <ColourButton 
-                        key={colour.hex} 
-                        currentlySelected={colour==currentColour} 
-                        colour={colour} handleClick={() => handleColourClick(colour)}
-                      />
-                    })}
-                  </div>
-                </div>
-              );
-            })
-            : <p>There are no colours that match your search</p>
-            }
-          </div>
+          <ColourGalary currentColour={currentColour} colourFilter={colourFilter} textFilter={textFilter} handleClick={handleColourClick}/>
         </div>
-        <div className={styles.colourDisplay}>
-          <h1>{currentColour.name}</h1>
-          <div className={styles.canvasContainer}>
-            <Canvas>
-              <mesh>
-                <ambientLight intensity={Math.PI / 2} />
-                <spotLight position={[30, 30, 30]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
-                <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
-                <Box colour={currentColour.hex}/>
-              </mesh>
-            </Canvas>  
-          </div>
-        </div> 
+        <ColourDisplay currentColour={currentColour}/>
       </div>
     </div>
   );
@@ -125,5 +71,85 @@ function Box({colour}){
       <boxGeometry args={[3,3,3]}/>
       <meshStandardMaterial color={colourValue}/>
     </mesh>
+  )
+}
+
+function ColourFilters({handleFilterClick, colourFilter}){
+  return (
+    <>
+      <p>Filter by colour</p>
+      <div className={styles.filterColours}>
+        <ColourFilter colour="Green" colourId="Green" colourFilter={colourFilter} handleClick={handleFilterClick}/>
+        <ColourFilter colour="Light grey" colourId="Neutral" colourFilter={colourFilter} handleClick={handleFilterClick}/>
+        <ColourFilter colour="Blue" colourId="Blue" colourFilter={colourFilter} handleClick={handleFilterClick}/>
+      </div>
+    </>
+  )
+}
+
+function ColourFilter({colour, colourId, colourFilter, handleClick}){
+  return <button className={`${styles.colourFilter} ${colourFilter === colourId ? styles.selected : ""}`} style={{backgroundColor: colour}} onClick={() => handleClick(colourId)}/>
+}
+
+function TextFilter({handleUpdate, textFilter}){
+  return <input onChange={handleUpdate} value={textFilter} placeholder="Search by colour name"></input>
+}
+
+function ColourGalary({colourFilter, textFilter, currentColour, handleClick}){
+  let filteredColours = colourGroups.map(group => ({ ...group, colours: [...group.colours] }))
+  
+  // Apply colour filter (keep only matching groups)
+  if (colourFilter) {
+    filteredColours = filteredColours.filter(group => group.class === colourFilter)
+  }
+  // Apply text filter
+  if (textFilter) {
+    const q = textFilter.toLowerCase()
+    filteredColours = filteredColours.map(group => {
+      return { ...group, colours: group.colours.filter(colour => colour.name.toLowerCase().includes(q)) }
+    })
+  }
+  // Remove empty colour groups
+  filteredColours = filteredColours.filter(group => group.colours.length > 0)
+
+  return (
+    <div>
+      {filteredColours.length > 0 ? filteredColours.map((colourGroup) => {
+        return (
+          <div key ={colourGroup.class} className={styles.colourOptions}>
+            <h1>{colourGroup.class}</h1>
+            <div className={styles.colourSelect}>
+              {colourGroup.colours.map((colour) => {
+                return <ColourButton 
+                  key={colour.hex} 
+                  currentlySelected={colour==currentColour} 
+                  colour={colour} handleClick={() => handleClick(colour)}
+                />
+              })}
+            </div>
+          </div>
+        );
+      })
+      : <p>There are no colours that match your search</p>
+      }
+    </div>
+  )
+}
+
+function ColourDisplay({currentColour}){
+  return (
+    <div className={styles.colourDisplay}>
+      <h1>{currentColour.name}</h1>
+      <div className={styles.canvasContainer}>
+        <Canvas>
+          <mesh>
+            <ambientLight intensity={Math.PI / 2} />
+            <spotLight position={[30, 30, 30]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
+            <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
+            <Box colour={currentColour.hex}/>
+          </mesh>
+        </Canvas>  
+      </div>
+    </div> 
   )
 }
