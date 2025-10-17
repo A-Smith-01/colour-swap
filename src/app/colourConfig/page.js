@@ -31,6 +31,7 @@ export default function ColourConfig() {
 
   return (
     <>
+      <ColourDisplay currentColour={currentColour}/>
       <div className={styles.selectionContent}>
         <div className={styles.filterContainer}>
           <div className={styles.filter}>
@@ -42,7 +43,7 @@ export default function ColourConfig() {
         </div>
         <ColourGalary currentColour={currentColour} colourFilter={colourFilter} textFilter={textFilter} handleClick={handleColourClick}/>
       </div>
-      <ColourDisplay currentColour={currentColour}/>
+      
     </>
   );
 }
