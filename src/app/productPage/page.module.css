@@ -1,0 +1,79 @@
+.heroImage{
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.navArrows{
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    z-index: 1;
+    top: calc(50% - 40px);
+    width: 100%;
+    padding: 20px;
+}
+
+.navArrow{
+    height: 40px;
+    width: 40px;
+    border-radius: 15px;
+    background-color: lightgrey;
+    color: black;
+    text-align: center;
+    line-height: 40px;
+    font-size: 2rem;
+    opacity: 50%;
+    user-select: none;
+}
+
+.navArrow:hover{
+    opacity: 100%;
+}
+
+.imageRibbon{
+    display: flex;
+    justify-content: space-between;
+}
+
+.thumb:hover{
+    box-shadow: 0 0 0 1px white, 0 0 0 2px black;
+}
+
+.selected{
+    box-shadow: 0 0 0 1px white, 0 0 0 2px black;
+}
+
+.details{
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.details > *:not(:last-child){
+    margin-bottom: 20px;
+}
+
+.colourNav{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid lightgray;
+}
+
+.colourNav:hover{
+    border-bottom: 2px solid white;
+}
+
+.colourPreview{
+    width: 50px;
+    height: 50px;
+    background-color: antiquewhite;
+    margin-right: 20px;
+}
+
+.colourNav > div{
+    display: flex;
+    align-items: center;
+}
