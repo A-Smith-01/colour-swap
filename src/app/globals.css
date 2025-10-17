@@ -46,4 +46,16 @@ button{
   background: none;
 }
 
+.content{
+    display: flex;
+    max-width: 1400px;
+    margin: auto;
+    padding: 20px;
+    padding-top: 100px;
+}
+
+.hidden{
+  display: none;
+}
+
 div{background: none;}
