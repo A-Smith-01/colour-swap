@@ -29,7 +29,9 @@ function ProductShowcase(){
     return (
         <div className={styles.productShowcase}>
             <div className={styles.heroImage}>
-                <Image src={productImages[index]} alt="An image of the product" width={600} height={500}/>
+                <div className={styles.imgContainer}>
+                    <Image src={productImages[index]} alt="An image of the product" width={600} height={500}/>
+                </div>
                 <div className={styles.navArrows}>
                     <div className={`${styles.navArrow}`} style={{visibility: index == 0 ? "hidden" : "visible"}} onClick={() => {handleNavClick(-1)}}>{"<"}</div>
                     <div className={`${styles.navArrow}`} style={{visibility: index == 3 ? "hidden" : "visible"}} onClick={() => {handleNavClick(1)}}>{">"}</div>

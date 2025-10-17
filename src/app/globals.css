@@ -54,6 +54,14 @@ button{
     padding-top: 100px;
 }
 
+@media (max-width:600px) {
+  .content{
+    display: block;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
 .hidden{
   display: none;
 }

@@ -74,6 +74,7 @@
 }
 
 .colourDisplay{
+    justify-self: end;
     display: flex;
     flex-direction: column;
     width: 30%;
@@ -82,7 +83,29 @@
     text-align: center;
     top: 0;
     position:sticky;
+    order: 2;
     
+}
+
+@media (max-width: 600px){
+    .colourDisplay{
+        width: 100%;
+        background-color: var(--background);
+        border-bottom: 2px solid white;
+    }
+
+    .selectionContent{
+        width: 100%;
+        padding: 20px;
+    }
+
+    .filterContainer{
+        display: block;
+    }
+
+    .filter{
+        margin-top: 20px;
+    }
 }
 
 .canvasContainer{
