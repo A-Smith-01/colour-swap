@@ -25,10 +25,10 @@ const shapes = [
             }
         ],
         images: [
-            '/productImages/image1.jpg',
-            '/productImages/image2.jpg',
-            '/productImages/image3.jpg',
-            '/productImages/image4.jpg'
+            '/productImages/cube/image1.jpg',
+            '/productImages/cube/image2.jpg',
+            '/productImages/cube/image3.jpg',
+            '/productImages/cube/image4.jpg'
         ]
     },
     {
