@@ -6,6 +6,7 @@ import * as THREE from 'three/webgpu'
 import { useSearchParams  } from 'next/navigation';
 import shapes from "../shapes";
 import ColourSelector from "../_components/ColourSelector";
+import Shape from "../_components/Shape";
 // import { OrbitControls } from '@react-three/drei'
 
 export default function ColourConfig() {
@@ -20,7 +21,7 @@ export default function ColourConfig() {
 
   return (
     <>
-      <ColourDisplay currentColour={currentColour}/>
+      <ColourDisplay currentColour={currentColour} shape={shape.id}/>
       <div className={styles.selectionContent}>
         <ColourSelector 
           colourGroups={shape.colours} 
@@ -31,7 +32,7 @@ export default function ColourConfig() {
   );
 }
 
-function ColourDisplay({currentColour}){
+function ColourDisplay({currentColour, shape}){
   return (
     <div className={styles.colourDisplay}>
       <h1>{currentColour.name}</h1>
@@ -41,7 +42,7 @@ function ColourDisplay({currentColour}){
             <ambientLight intensity={Math.PI / 2} />
             <spotLight position={[30, 30, 30]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
             <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
-            <Box colour={currentColour.hex}/>
+            <Shape colour={currentColour.hex} shape={shape}/>
           </mesh>
         </Canvas>  
       </div>
