@@ -1,20 +1,25 @@
 'use client'
 import styles from "./page.module.css";
 import { useState } from "react"
-import productImages from "./productImages";
+// import productImages from "./productImages";
 import Image from "next/image";
-import Link from "next/link"
+import Link from "next/link";
+import { useSearchParams  } from 'next/navigation';
+import shapes from "../shapes";
 
 export default function ProductPage(){
+    const searchParams = useSearchParams();
+    const data = searchParams.get('id');
+    const shape = shapes.find(s => s.id === data);
     return (
         <>
-            <ProductShowcase />
-            <SidePannel />
+            <ProductShowcase productImages={shape.images}/>
+            <SidePannel shape={shape}/>
         </>
     )
 }
 
-function ProductShowcase(){
+function ProductShowcase({productImages}){
     const [index, setIndex] = useState(0)
 
     function handleImageClick(newIndex){
@@ -50,12 +55,15 @@ function ProductShowcase(){
     )
 }
 
-function SidePannel(){
+function SidePannel({shape}){
     return (
         <div className={styles.details}>
-            <h1>A Cube</h1>
-            <p>With six faces, twelve equal edges and eight verticies, this is a real cube just as you remember it</p>
-            <Link href="/colourConfig">
+            <h1>{shape.name}</h1>
+            <p>{shape.description}</p>
+            <Link href={{
+                pathname: '/colourConfig',
+                query: { id: shape.id }
+            }}>
                 <div className={styles.colourNav}>
                     <div>
                         <div className={styles.colourPreview}/>

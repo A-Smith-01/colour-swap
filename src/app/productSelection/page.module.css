@@ -1,0 +1,89 @@
+.productSelection{
+    width: 100%;
+}
+
+.heroImage{
+    height: 600px;
+    position: relative;
+}
+
+.heroImage > div{
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: black;
+}
+
+.gallary{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.image{
+    width: 100%;
+}
+
+.filterContainer{
+    display: flex;
+    padding: 20px 0 20px 0;
+    border-bottom: 1px solid gray;
+}
+
+.filter:not(:last-child){
+    margin-right:24px
+}
+
+.filter > button {
+    display: flex;
+    font-size: 1rem;
+    align-items: center;
+}
+
+.filter button span{
+    font-weight: 500;
+    margin-right: 20px;
+    max-width: 16ch;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+@keyframes chevronRotate1 {
+    from {rotate: -90deg}
+    to {rotate: 90deg}
+}
+
+.filter svg{
+    rotate: 90deg;
+    animation-name: chevronRotate1;
+    animation-duration: 0.2s;
+}
+
+@keyframes chevronRotate2 {
+    from {rotate: 90deg}
+    to {rotate: -90deg}
+}
+
+.focused svg{
+    rotate: -90deg;
+    animation-name: chevronRotate2;
+    animation-duration: 0.2s;
+}
+
+.filteroptions{
+    display: flex;
+    padding: 20px;
+}
+
+.checkButton{
+    display: flex;
+    font-size: 1rem;
+    padding-right: 24px;
+}
+
+.checkbox{
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--foreground);
+    margin-right: 10px;
+}

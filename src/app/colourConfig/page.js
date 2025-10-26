@@ -1,19 +1,38 @@
 'use client'
 import styles from "./page.module.css";
 import { useState, useRef } from "react"
-import colourGroups from "./colours";
+// import colourGroups from "../colours";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from 'three/webgpu'
+import { useSearchParams  } from 'next/navigation';
+import shapes from "../shapes";
 // import { OrbitControls } from '@react-three/drei'
 
 export default function ColourConfig() {
-  const [currentColour, setCurrentColour] = useState(colourGroups[0].colours[0])
-  const [colourFilter, setColourFilter] = useState(null)
-  const [textFilter, setTextFilter] = useState("")
+  const searchParams = useSearchParams();
+  const data = searchParams.get('id');
+  const shape = shapes.find(s => s.id === data);
+  const [currentColour, setCurrentColour] = useState(shape.colours[0].colours[0])
 
   function handleColourClick(colour){
     setCurrentColour(colour)
   }
+
+  return (
+    <>
+      <ColourDisplay currentColour={currentColour}/>
+      <ColourSelector 
+        colourGroups={shape.colours} 
+        currentColour={currentColour} 
+        handleColourClick={handleColourClick}/>
+      
+    </>
+  );
+}
+
+function ColourSelector({colourGroups, currentColour, handleColourClick}){
+  const [colourFilter, setColourFilter] = useState(null)
+  const [textFilter, setTextFilter] = useState("")
 
   function handleFilterClick(colour){
     if(colour == colourFilter){
@@ -28,24 +47,19 @@ export default function ColourConfig() {
   function handleUpdate(e){
     setTextFilter(e.target.value)
   }
-
   return (
-    <>
-      <ColourDisplay currentColour={currentColour}/>
-      <div className={styles.selectionContent}>
-        <div className={styles.filterContainer}>
-          <div className={styles.filter}>
-            <ColourFilters handleFilterClick={handleFilterClick} colourFilter={colourFilter}/>
-          </div>
-          <div className={styles.filter}>
-            <TextFilter handleUpdate={handleUpdate} textFilter={textFilter}/>
-          </div>
+    <div className={styles.selectionContent}>
+      <div className={styles.filterContainer}>
+        <div className={styles.filter}>
+          <ColourFilters handleFilterClick={handleFilterClick} colourFilter={colourFilter}/>
         </div>
-        <ColourGalary currentColour={currentColour} colourFilter={colourFilter} textFilter={textFilter} handleClick={handleColourClick}/>
+        <div className={styles.filter}>
+          <TextFilter handleUpdate={handleUpdate} textFilter={textFilter}/>
+        </div>
       </div>
-      
-    </>
-  );
+      <ColourGalary colourGroups={colourGroups} currentColour={currentColour} colourFilter={colourFilter} textFilter={textFilter} handleClick={handleColourClick}/>
+    </div>
+  )
 }
 
 function ColourButton({currentlySelected, colour, handleClick}){
@@ -94,7 +108,7 @@ function TextFilter({handleUpdate, textFilter}){
   return <input onChange={handleUpdate} value={textFilter} placeholder="Search by colour name"></input>
 }
 
-function ColourGalary({colourFilter, textFilter, currentColour, handleClick}){
+function ColourGalary({colourGroups, colourFilter, textFilter, currentColour, handleClick}){
   let filteredColours = colourGroups.map(group => ({ ...group, colours: [...group.colours] }))
   
   // Apply colour filter (keep only matching groups)
