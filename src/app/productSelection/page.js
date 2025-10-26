@@ -1,6 +1,6 @@
 'use client'
 import * as THREE from 'three/webgpu'
-import { useState, useRef } from "react"
+import { useState, useRef, act } from "react"
 import { Canvas, useFrame } from "@react-three/fiber";
 import shapes from "../shapes";
 import Image from "next/image";
@@ -9,6 +9,7 @@ import styles from "./page.module.css";
 import colours from "../colours";
 import ColourSelector from "../_components/ColourSelector";
 import Shape from "../_components/Shape";
+import ColourButton from '../_components/ColourButton';
 
 
 export default function Main(){
@@ -56,7 +57,7 @@ export default function Main(){
             <div className={styles.gallary}>
                 {filteredShapes.map((shape, idx) => {
                     return (
-                        <Item key={idx} item={shape} />
+                        <Item key={idx} item={shape} activeColour={colourFilter}/>
                     )
                 })}
                 <Item />
@@ -77,8 +78,12 @@ function HeroImage(){
     )
 }
 
-function Item({item}){
+function Item({item, activeColour}){
+    const [currentColour, setCurrentColour] = useState(item ? item.colours[0].colours[0] : null)
     if (!item) return;
+    const colour = activeColour ? activeColour : currentColour
+    const noColours = item.colours.reduce((total, group) => total + group.colours.length, 0);
+    const itemColours = item.colours.flatMap(group => group.colours);
     return (
         <div className="Item">
             <Link href={{
@@ -91,19 +96,40 @@ function Item({item}){
                             <ambientLight intensity={Math.PI / 2} />
                             <spotLight position={[30, 30, 30]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
                             <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
-                            <Shape colour={"#ffffff"} shape={item.id}/>
+                            <Shape colour={colour.hex} shape={item.id}/>
                         </mesh>
                     </Canvas>  
                 </div>
                 <div className="info">
                     <h2>{item.name}</h2>
-                        <p>{item.price}</p>
-                        <div className="colour-select">
-                            <div className="colour-button"></div>
-                            <span>+x more colours</span>
-                        </div>
+                    <p>{item.price}</p>
                 </div>
             </Link>
+            <div className={styles.colourSelect}>
+                {activeColour ? 
+                    <>
+                        <div className={styles.smallColourButton}>
+                            <ColourButton 
+                                currentlySelected={colour} 
+                                colour={colour}
+                                handleClick={() => null}
+                                compact={true}/>
+                        </div>
+                        <span>{`+ ${noColours-1} colours`}</span>
+                    </> 
+                : <>{itemColours.map((itemCol, idx) => {
+                    return (
+                    <div key={idx} className={styles.smallColourButton}>
+                        <ColourButton 
+                            currentlySelected={itemCol==currentColour} 
+                            colour={itemCol} 
+                            handleClick={() => setCurrentColour(itemCol)}
+                            compact={true}/>
+                    </div>
+                    )
+                })}</>
+                }
+            </div>
         </div>
     )
 }

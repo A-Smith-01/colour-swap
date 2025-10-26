@@ -83,3 +83,15 @@
     border: 1px solid var(--foreground);
     margin-right: 10px;
 }
+
+.colourSelect{
+    display: flex;
+}
+
+.smallColourButton{
+    margin-right: 4px;
+}
+
+.smallColourButton > *{
+    width: 20px;
+}
