@@ -1,13 +1,21 @@
 'use client'
 import styles from "./page.module.css";
-import { useState } from "react"
+import { useState, Suspense } from "react"
 // import productImages from "./productImages";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams  } from 'next/navigation';
 import shapes from "../shapes";
 
-export default function ProductPage(){
+export default function ProductPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProductPageContent />
+    </Suspense>
+  );
+}
+
+function ProductPageContent(){
     const searchParams = useSearchParams();
     const data = searchParams.get('id');
     const shape = shapes.find(s => s.id === data);

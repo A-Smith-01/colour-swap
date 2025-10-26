@@ -1,6 +1,6 @@
 'use client'
 import styles from "./page.module.css";
-import { useState, useRef } from "react"
+import { useState, useRef, Suspense } from "react"
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from 'three/webgpu'
 import { useSearchParams  } from 'next/navigation';
@@ -10,6 +10,14 @@ import Shape from "../_components/Shape";
 // import { OrbitControls } from '@react-three/drei'
 
 export default function ColourConfig() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ColourConfigContent />
+    </Suspense>
+  );
+}
+
+function ColourConfigContent() {
   const searchParams = useSearchParams();
   const data = searchParams.get('id');
   const shape = shapes.find(s => s.id === data);
