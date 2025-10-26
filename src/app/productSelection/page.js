@@ -7,10 +7,12 @@ import Image from "next/image";
 import Link from "next/link"
 import styles from "./page.module.css";
 import colours from "../colours";
+import ColourSelector from "../_components/ColourSelector";
 
 
 export default function Main(){
     const [typeFilter, setTypefilter] = useState([])
+    const [colourFilter, setColourFilter] = useState(null)
     let filteredShapes = [...shapes]
 
     function updateTypeFilter(newFilter){
@@ -20,15 +22,36 @@ export default function Main(){
             setTypefilter([...typeFilter, newFilter])
         }
     }
+
+    function updateColourFilter(colour){
+        if(colour == colourFilter){
+            setColourFilter(null)
+        }else{
+            setColourFilter(colour)
+        }
+    }
+
     console.log(typeFilter)
     if(typeFilter.length > 0){
         filteredShapes = filteredShapes.filter((shape) => typeFilter.includes(shape.type))
     }
 
+    if(colourFilter){
+        filteredShapes = filteredShapes.filter((shape) => {
+            return shape.colours.some((colourGroup) => {
+                return colourGroup.colours.some((colour) => colour.name == colourFilter.name)
+            })
+        })
+    }
+
     return (
         <div className={styles.productSelection}>
             <HeroImage/>
-            <Filters updateTypeFilter={updateTypeFilter} typeFilter={typeFilter}/>
+            <Filters 
+                updateTypeFilter={updateTypeFilter} 
+                typeFilter={typeFilter} 
+                colourFilter={colourFilter}
+                updateColourFilter={updateColourFilter}/>
             <div className={styles.gallary}>
                 {filteredShapes.map((shape, idx) => {
                     return (
@@ -44,7 +67,7 @@ export default function Main(){
 function HeroImage(){
     return (
         <div className={styles.heroImage}>
-            <Image src={"/productImages/cover-image.webp"} alt="" width={1400} height={600}/>
+            <Image src={"/productImages/cover-image.webp"} alt="" fill={true}/>
             <div>
                 <h1>Shapes for Entities</h1>
                 <p>Handmade for translating, rotating and everything inbetween</p>
@@ -84,7 +107,7 @@ function Item({item}){
     )
 }
 
-function Filters({updateTypeFilter, updateColourFilter, typeFilter}){
+function Filters({updateTypeFilter, updateColourFilter, typeFilter, colourFilter}){
     const [focus, setFocus] = useState("")
 
     function handleSelectFilterClick(newFocus){
@@ -92,17 +115,18 @@ function Filters({updateTypeFilter, updateColourFilter, typeFilter}){
     }
 
     const typeFilterValue = typeFilter.length > 0 ? typeFilter.join(", ") : "All Types"
+    const colourFilterValue = colourFilter ? colourFilter.name : "Any Colour"
 
     return (
         <>
             <div className={styles.filterContainer}>
                 <Filter type="Shape type" value={typeFilterValue} handleClick={() => {handleSelectFilterClick("type")}} focused={focus == "type"}/>
-                <Filter type="Colour" value={"Any Colour"} handleClick={() => {handleSelectFilterClick("colour")}} focused={focus == "colour"}/>
+                <Filter type="Colour" value={colourFilterValue} handleClick={() => {handleSelectFilterClick("colour")}} focused={focus == "colour"}/>
             </div>
             <div className={styles.filteroptions}>
                 {focus ? focus == "type" ? 
                     <TypeFilter updateFilter={updateTypeFilter}/>
-                    : <ColourFilter handleClick={updateColourFilter}/>
+                    : <ColourFilter handleClick={updateColourFilter} selected={colourFilter} colours={colours}/>
                     : <p>Showing a few shapes</p>
                 }
             </div>
@@ -153,7 +177,11 @@ function CheckButton({name, handleClick}){
 
 function ColourFilter({colours, handleClick, selected}){
     return (
-        <></>
+        <ColourSelector 
+            colourGroups={colours} 
+            handleColourClick={handleClick} 
+            currentColour={selected}
+            compact={true}/>
     )
 }
 

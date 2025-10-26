@@ -3,7 +3,7 @@
 }
 
 .heroImage{
-    height: 600px;
+    aspect-ratio: 21/9;
     position: relative;
 }
 
@@ -17,10 +17,6 @@
 .gallary{
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.image{
-    width: 100%;
 }
 
 .filterContainer{
