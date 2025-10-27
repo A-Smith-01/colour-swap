@@ -102,7 +102,7 @@ function Item({item, activeColour}){
                 </div>
                 <div className="info">
                     <h2>{item.name}</h2>
-                    <p>{item.price}</p>
+                    <p>{`£${item.price}`}</p>
                 </div>
             </Link>
             <div className={styles.colourSelect}>

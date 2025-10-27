@@ -64,6 +64,7 @@ function ProductShowcase({productImages}){
 }
 
 function SidePannel({shape}){
+    const colour = shape.colours[0].colours[0]; // Default to first colour in first colour group
     return (
         <div className={styles.details}>
             <h1>{shape.name}</h1>
@@ -74,8 +75,8 @@ function SidePannel({shape}){
             }}>
                 <div className={styles.colourNav}>
                     <div>
-                        <div className={styles.colourPreview}/>
-                        <span>Egg White</span>
+                        <div className={styles.colourPreview} style={{backgroundColor:colour.hex}}/>
+                        <span>{colour.name}</span>
                     </div>
                     <span><b>{"Pick a colour >"}</b></span>
                 </div>

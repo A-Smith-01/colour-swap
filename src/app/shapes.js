@@ -36,6 +36,7 @@ const shapes = [
         name: "Tetrahedron",
         type: "Polyhedron",
         price: 14.99,
+        description: "With four triangular faces, six edges and four verticies, this simple shape is a classic",
         colours: [
             {
             class:"Neutral",
@@ -54,6 +55,12 @@ const shapes = [
                 },
             ]
             }
+        ],
+        images: [
+            '/productImages/tetrahedron/image1.jpg',
+            '/productImages/tetrahedron/image2.JPG',
+            '/productImages/tetrahedron/image3.png',
+            '/productImages/tetrahedron/image4.png'
         ]
     },
     {
@@ -61,6 +68,7 @@ const shapes = [
         name: "Torus",
         type: "Not Polyhedron",
         price: 54.99,
+        description: "A doughnut shape with a hole in the middle, perfect for stacking and rolling",
         colours: [
             {
             class:"Blue",
@@ -79,6 +87,12 @@ const shapes = [
                 },
             ]
             }
+        ],
+        images: [
+            '/productImages/torus/image1.png',
+            '/productImages/torus/image2.webp',
+            '/productImages/torus/image3.png',
+            '/productImages/torus/image4.png'
         ]
     }
 ]
