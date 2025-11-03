@@ -88,7 +88,7 @@ function Item({item, activeColour}){
         <div className="Item">
             <Link href={{
                 pathname: '/productPage',
-                query: { id: item.id }
+                query: { id: item.id, colour: colour.name }
             }}>
                 <div className="image">
                     <Canvas>
