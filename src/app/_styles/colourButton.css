@@ -1,0 +1,20 @@
+.colourButton{
+    text-align: left;
+    font-size: 1rem;
+}
+
+.colourButton:hover div{
+    outline: 1px solid white;
+    outline-offset: -1px;
+    border: 2px solid black;
+}
+
+.colourButton div{
+    width: 100%;
+    aspect-ratio: 1;
+    margin-bottom: 10px;
+}
+
+.selected{
+    box-shadow: 0 0 0 1px white, 0 0 0 2px black;
+}

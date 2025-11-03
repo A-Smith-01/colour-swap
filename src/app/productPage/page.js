@@ -1,20 +1,35 @@
 'use client'
 import styles from "./page.module.css";
-import { useState } from "react"
-import productImages from "./productImages";
+import { useState, Suspense } from "react"
+// import productImages from "./productImages";
 import Image from "next/image";
-import Link from "next/link"
+import Link from "next/link";
+import { useSearchParams  } from 'next/navigation';
+import shapes from "../shapes";
 
-export default function ProductPage(){
+export default function ProductPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProductPageContent />
+    </Suspense>
+  );
+}
+
+function ProductPageContent(){
+    const searchParams = useSearchParams();
+    const data = searchParams.get('id');
+    const colourParam = searchParams.get('colour');
+    const shape = shapes.find(s => s.id === data);
+    const colour = shape ? shape.colours.flatMap(group => group.colours).find(c => c.name === colourParam) : null;
     return (
         <>
-            <ProductShowcase />
-            <SidePannel />
+            <ProductShowcase productImages={shape.images}/>
+            <SidePannel shape={shape} colour={colour}/>
         </>
     )
 }
 
-function ProductShowcase(){
+function ProductShowcase({productImages}){
     const [index, setIndex] = useState(0)
 
     function handleImageClick(newIndex){
@@ -50,16 +65,20 @@ function ProductShowcase(){
     )
 }
 
-function SidePannel(){
+function SidePannel({shape, colour}){
+    colour ??= shape.colours[0].colours[0] ; // Default to first colour in first colour group
     return (
         <div className={styles.details}>
-            <h1>A Cube</h1>
-            <p>With six faces, twelve equal edges and eight verticies, this is a real cube just as you remember it</p>
-            <Link href="/colourConfig">
+            <h1>{shape.name}</h1>
+            <p>{shape.description}</p>
+            <Link href={{
+                pathname: '/colourConfig',
+                query: { id: shape.id }
+            }}>
                 <div className={styles.colourNav}>
                     <div>
-                        <div className={styles.colourPreview}/>
-                        <span>Egg White</span>
+                        <div className={styles.colourPreview} style={{backgroundColor:colour.hex}}/>
+                        <span>{colour.name}</span>
                     </div>
                     <span><b>{"Pick a colour >"}</b></span>
                 </div>
