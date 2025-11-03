@@ -7,6 +7,7 @@ import { useSearchParams  } from 'next/navigation';
 import shapes from "../shapes";
 import ColourSelector from "../_components/ColourSelector";
 import Shape from "../_components/Shape";
+import Link from "next/link";
 // import { OrbitControls } from '@react-three/drei'
 
 export default function ColourConfig() {
@@ -54,22 +55,14 @@ function ColourDisplay({currentColour, shape}){
           </mesh>
         </Canvas>  
       </div>
+      <Link href={{
+                pathname: '/productPage',
+                query: { id: shape, colour: currentColour.name }
+            }}>
+        <button className={styles.proceedButton}>Proceed to product page <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+                    <path d="M9 18l6-6-6-6"></path>
+                </svg></button>      
+      </Link>
     </div> 
-  )
-}
-
-function Box({colour}){
-  const colourValue = new THREE.Color(parseInt ( colour.replace("#","0x"), 16 ));
-  const ref = useRef()
-  useFrame((state, delta) => {
-    ref.current.rotation.x += delta;
-    ref.current.rotation.y += delta;
-  })
-
-  return (
-    <mesh ref={ref}> 
-      <boxGeometry args={[3,3,3]}/>
-      <meshStandardMaterial color={colourValue}/>
-    </mesh>
   )
 }

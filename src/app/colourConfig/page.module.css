@@ -16,6 +16,21 @@
     
 }
 
+.colourDisplay > :not(:last-child){
+    margin-bottom: 20px;
+}
+
+.proceedButton{
+    display: flex;
+    padding: 10px 20px 10px 20px;
+    font-size: 1.2rem;
+    text-align: center;
+    align-items: center;
+    margin: auto;
+    border: 1px solid var(--foreground);
+    border-radius: 8px;
+}
+
 @media (max-width: 600px){
     .colourDisplay{
         width: 100%;
