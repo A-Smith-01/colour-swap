@@ -18,11 +18,13 @@ export default function ProductPage() {
 function ProductPageContent(){
     const searchParams = useSearchParams();
     const data = searchParams.get('id');
+    const colourParam = searchParams.get('colour');
     const shape = shapes.find(s => s.id === data);
+    const colour = shape ? shape.colours.flatMap(group => group.colours).find(c => c.name === colourParam) : null;
     return (
         <>
             <ProductShowcase productImages={shape.images}/>
-            <SidePannel shape={shape}/>
+            <SidePannel shape={shape} colour={colour}/>
         </>
     )
 }
@@ -63,8 +65,8 @@ function ProductShowcase({productImages}){
     )
 }
 
-function SidePannel({shape}){
-    const colour = shape.colours[0].colours[0]; // Default to first colour in first colour group
+function SidePannel({shape, colour}){
+    colour ??= shape.colours[0].colours[0] ; // Default to first colour in first colour group
     return (
         <div className={styles.details}>
             <h1>{shape.name}</h1>
